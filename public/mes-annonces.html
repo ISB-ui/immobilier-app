@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes annonces - Immobilier App</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+        :root {
+            --primary: #27ae60;
+            --secondary: #1e8449;
+            --light-bg: #f8f9fa;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        nav {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary) !important;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 30px 0;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        table {
+            margin: 0;
+        }
+
+        thead {
+            background-color: var(--light-bg);
+        }
+
+        th {
+            border: none;
+            color: #333;
+            font-weight: 600;
+            padding: 15px;
+        }
+
+        td {
+            vertical-align: middle;
+            padding: 15px;
+            border-color: #eee;
+        }
+
+        .annonce-title {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .badge {
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-weight: 600;
+        }
+
+        .badge-attente {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .badge-validee {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .badge-refusee {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .btn-action {
+            padding: 5px 10px;
+            font-size: 12px;
+            margin: 0 3px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-edit {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background: #2980b9;
+        }
+
+        .btn-delete {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #c0392b;
+        }
+
+        .btn-view {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-view:hover {
+            background: var(--secondary);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            color: #ccc;
+            margin-bottom: 20px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            border: 4px solid var(--light-bg);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .modal-content {
+            border: none;
+            border-radius: 10px;
+        }
+
+        .modal-header {
+            background: var(--primary);
+            color: white;
+            border: none;
+        }
+
+        .btn-close-white {
+            filter: brightness(0) invert(1);
+        }
+
+        @media (max-width: 768px) {
+            table {
+                font-size: 12px;
+            }
+
+            th, td {
+                padding: 10px 5px;
+            }
+
+            .btn-action {
+                padding: 3px 6px;
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/index.html"><i class="fas fa-home"></i> Immobilier</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/index.html">Accueil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/ajouter-annonce.html">Ajouter</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/mes-annonces.html">Mes annonces</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="logoutBtn" onclick="logout(); return false;">Déconnexion</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-5">
+        <h1 class="page-title">Mes annonces</h1>
+
+        <div id="loadingContainer" class="loading" style="display: none;">
+            <div class="spinner"></div>
+            <p>Chargement de vos annonces...</p>
+        </div>
+
+        <div class="table-container" id="tableContainer" style="display: none;">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Titre</th>
+                        <th>Type</th>
+                        <th>Prix</th>
+                        <th>Statut</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="annoncesBody">
+                </tbody>
+            </table>
+        </div>
+
+        <div id="emptyState" class="empty-state" style="display: none;">
+            <i class="fas fa-inbox"></i>
+            <h3>Aucune annonce</h3>
+            <p>Vous n'avez pas encore publié d'annonce</p>
+            <a href="/ajouter-annonce.html" class="btn btn-primary mt-3">Ajouter une annonce</a>
+        </div>
+    </div>
+
+    <!-- Modal pour détails du refus -->
+    <div class="modal fade" id="refusModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Raison du refus</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="refusReason"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Vérifier la connexion
+        window.addEventListener('load', () => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = '/login.html';
+            }
+            loadAnnonces();
+        });
+
+        async function loadAnnonces() {
+            const token = localStorage.getItem('token');
+            const loadingContainer = document.getElementById('loadingContainer');
+            const tableContainer = document.getElementById('tableContainer');
+            const emptyState = document.getElementById('emptyState');
+            const annoncesBody = document.getElementById('annoncesBody');
+
+            loadingContainer.style.display = 'block';
+            tableContainer.style.display = 'none';
+            emptyState.style.display = 'none';
+
+            try {
+                const response = await fetch('/api/mes-annonces', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                const data = await response.json();
+                loadingContainer.style.display = 'none';
+
+                if (data.success && data.annonces.length > 0) {
+                    // Afficher les messages d'admin en haut
+                    const messageAdmin = data.annonces.find(a => a.messageAdmin);
+                    if (messageAdmin) {
+                        const alertClass = messageAdmin.statut === 'Validée' ? 'alert-success' : 'alert-danger';
+                        const alertHtml = `<div class="alert ${alertClass} alert-dismissible fade show" role="alert">
+                            ${messageAdmin.messageAdmin}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>`;
+                        annoncesBody.parentElement.insertAdjacentHTML('beforebegin', alertHtml);
+                    }
+
+                    annoncesBody.innerHTML = data.annonces.map(annonce => `
+                        <tr>
+                            <td>
+                                <strong class="annonce-title">${annonce.titre}</strong>
+                                <br>
+                                <small class="text-muted">${annonce.quartier}</small>
+                            </td>
+                            <td>
+                                <span class="badge" style="background: #e3f2fd; color: #1976d2;">${annonce.typeTransaction}</span>
+                                <br>
+                                <small>${annonce.typeBien}</small>
+                            </td>
+                            <td>${annonce.prix.toLocaleString()} €</td>
+                            <td>
+                                ${getStatutBadge(annonce.statut)}
+                            </td>
+                            <td>${new Date(annonce.dateCreation).toLocaleDateString('fr-FR')}</td>
+                            <td>
+                                ${getActions(annonce)}
+                            </td>
+                        </tr>
+                    `).join('');
+                    tableContainer.style.display = 'block';
+                } else {
+                    emptyState.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                loadingContainer.style.display = 'none';
+                emptyState.style.display = 'block';
+            }
+        }
+
+        function getStatutBadge(statut) {
+            const badges = {
+                'En attente': 'badge-attente',
+                'Validée': 'badge-validee',
+                'Refusée': 'badge-refusee'
+            };
+
+            const badgeClass = badges[statut] || 'badge-attente';
+            let icon = '';
+
+            if (statut === 'En attente') icon = '<i class="fas fa-hourglass-half"></i> ';
+            if (statut === 'Validée') icon = '<i class="fas fa-check-circle"></i> ';
+            if (statut === 'Refusée') icon = '<i class="fas fa-times-circle"></i> ';
+
+            return `<span class="badge ${badgeClass}">${icon}${statut}</span>`;
+        }
+
+        function getActions(annonce) {
+            let actions = `<button class="btn-action btn-view" onclick="viewAnnonce('${annonce._id}')"><i class="fas fa-eye"></i></button>`;
+
+            if (annonce.statut === 'En attente') {
+                actions += `<button class="btn-action btn-edit" onclick="editAnnonce('${annonce._id}')"><i class="fas fa-edit"></i></button>`;
+                actions += `<button class="btn-action btn-delete" onclick="deleteAnnonce('${annonce._id}')"><i class="fas fa-trash"></i></button>`;
+            }
+
+            if (annonce.statut === 'Refusée') {
+                actions += `<button class="btn-action btn-delete" onclick="showRefusReason('${annonce.messageAdmin || annonce.raisionRefus}')"><i class="fas fa-info-circle"></i></button>`;
+            }
+
+            return actions;
+        }
+
+        function viewAnnonce(id) {
+            window.location.href = `/annonce-detail.html?id=${id}`;
+        }
+
+        function editAnnonce(id) {
+            window.location.href = `/editer-annonce.html?id=${id}`;
+        }
+
+        async function deleteAnnonce(id) {
+            if (!confirm('Êtes-vous sûr de vouloir supprimer cette annonce?')) {
+                return;
+            }
+
+            const token = localStorage.getItem('token');
+
+            try {
+                const response = await fetch(`/api/annonces/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert('Annonce supprimée avec succès');
+                    loadAnnonces();
+                } else {
+                    alert(data.message || 'Erreur lors de la suppression');
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                alert('Erreur de connexion');
+            }
+        }
+
+        function showRefusReason(reason) {
+            document.getElementById('refusReason').textContent = reason || 'Aucune raison spécifiée';
+            new bootstrap.Modal(document.getElementById('refusModal')).show();
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = '/login.html';
+        }
+    </script>
+</body>
+</html>

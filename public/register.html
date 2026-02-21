@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inscription – brazza immo</title>
+
+<style>
+:root{
+  --green:#0b7a3e;
+  --yellow:#facc15;
+  --red:#dc2626;
+  --bg-light:linear-gradient(135deg,#0b7a3e,#facc15,#dc2626);
+  --bg-dark:linear-gradient(135deg,#020617,#052e16);
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+  font-family:'Segoe UI',sans-serif;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:var(--bg-light);
+}
+
+/* 🌗 Dark mode auto */
+@media(prefers-color-scheme:dark){
+  body{background:var(--bg-dark)}
+  .card{background:#020617;color:#e5e7eb}
+  input{background:#020617;color:white;border-color:#14532d}
+  label{color:#d1fae5}
+  .logo p{color:#e5e7eb}
+}
+
+.card{
+  width:100%;
+  max-width:380px;
+  background:white;
+  padding:40px;
+  border-radius:18px;
+  box-shadow:0 30px 70px rgba(0,0,0,.35);
+  animation:enter .8s ease;
+}
+
+@keyframes enter{
+  from{opacity:0;transform:translateY(40px) scale(.95)}
+  to{opacity:1;transform:none}
+}
+@keyframes exit{
+  to{opacity:0;transform:scale(.95) translateY(20px)}
+}
+
+/* 🌈 Gradient texte animé */
+@keyframes gradientMove {
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+
+.logo{text-align:center;margin-bottom:30px}
+.logo h1{
+  font-size:28px;
+  background:linear-gradient(90deg,#0b7a3e,#facc15,#dc2626);
+  background-size:200% 200%;
+  animation:gradientMove 4s linear infinite;
+  background-clip:text;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  color:transparent;
+}
+.logo p{color:#111;font-size:14px}
+
+.group{margin-bottom:18px}
+label{
+  display:block;
+  margin-bottom:6px;
+  font-size:13px;
+  font-weight:600;
+  color:#111; /* plus lisible en light mode */
+}
+input{
+  width:100%;
+  padding:12px 14px;
+  border-radius:10px;
+  border:1px solid #ddd;
+  font-size:14px;
+  transition:.3s;
+}
+input:focus{
+  border-color:var(--green);
+  box-shadow:0 0 0 3px rgba(11,122,62,.25);
+  outline:none;
+}
+
+/* 🌈 Bouton gradient animé */
+button{
+  width:100%;
+  padding:13px;
+  border-radius:12px;
+  border:none;
+  font-size:16px;
+  font-weight:600;
+  color:white;
+  cursor:pointer;
+  background:linear-gradient(135deg,#0b7a3e,#facc15,#dc2626);
+  background-size:200% 200%;
+  animation:gradientMove 4s linear infinite;
+  transition:.3s;
+}
+button:hover{
+  transform:translateY(-2px);
+  box-shadow:0 12px 25px rgba(0,0,0,.3);
+}
+
+.message{
+  display:none;
+  padding:10px;
+  border-radius:8px;
+  font-size:13px;
+  margin-bottom:15px;
+}
+.error{background:#fee2e2;color:#b91c1c}
+.success{background:#dcfce7;color:#166534}
+
+.loading{
+  display:none;
+  text-align:center;
+  margin-top:12px;
+  font-size:14px;
+  color:var(--green);
+}
+
+.links{
+  text-align:center;
+  margin-top:20px;
+  font-size:13px;
+}
+.links a{color:var(--green);text-decoration:none}
+.links a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="card" id="card">
+  <div class="logo">
+    <h1>🏠 BRAZZA IMMO</h1>
+    <p>Créer un compte</p>
+  </div>
+
+  <div id="error" class="message error"></div>
+  <div id="success" class="message success"></div>
+    <form id="registerForm">
+  <div class="group">
+    <label>Nom</label>
+    <input id="nom" name="nom" required>
+  </div>
+
+  <div class="group">
+    <label>Prénom</label>
+    <input id="prenom" name="prenom" required>
+  </div>
+
+  <div class="group">
+    <label>Email</label>
+    <input type="email" id="email" name="email" required>
+  </div>
+
+  <div class="group">
+    <label>Mot de passe</label>
+    <input type="password" id="password" name="password" minlength="6" required>
+  </div>
+
+  <div class="group">
+    <label>Confirmer le mot de passe</label>
+    <input type="password" id="confirm" name="confirm" required>
+  </div>
+
+  <button type="submit">S'inscrire</button>
+  <div class="loading" id="loading">Création du compte…</div>
+</form>
+
+
+  <div class="links">
+    Vous avez déjà un compte ? <a href="/login.html">Se connecter</a>
+  </div>
+</div>
+
+<script>
+const form = document.getElementById('registerForm');
+const error = document.getElementById('error');
+const success = document.getElementById('success');
+const loading = document.getElementById('loading');
+const nomInput = document.getElementById('nom');
+const prenomInput = document.getElementById('prenom');
+const emailInput = document.getElementById('email');
+const passwordInput = document.getElementById('password');
+const confirmInput = document.getElementById('confirm');
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  error.style.display = 'none';
+  success.style.display = 'none';
+
+  const nom = nomInput.value.trim();
+  const prenom = prenomInput.value.trim();
+  const email = emailInput.value.trim();
+  const pass = passwordInput.value.trim();
+  const conf = confirmInput.value.trim();
+
+  if (!nom || !prenom || !email || !pass || !conf) {
+    error.textContent = 'Veuillez fournir tous les champs obligatoires';
+    error.style.display = 'block';
+    return;
+  }
+
+  if (pass !== conf) {
+    error.textContent = 'Les mots de passe ne correspondent pas';
+    error.style.display = 'block';
+    return;
+  }
+
+  loading.style.display = 'block';
+
+  try {
+    const res = await fetch('/api/auth/register', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        nom: nom,
+        prenom: prenom,
+        email: email,
+        password: pass
+      })
+    });
+
+    const data = await res.json();
+    console.log('REGISTER RESPONSE:', data);
+
+    if (!res.ok) throw new Error(data.message || 'Erreur inscription');
+
+    if (data.token) {
+      localStorage.setItem('token', data.token);
+    }
+
+    success.textContent = 'Compte créé avec succès';
+    success.style.display = 'block';
+
+    setTimeout(() => {
+      window.location.href = '/ajouter-annonce.html';
+    }, 600);
+
+  } catch (err) {
+    console.error('REGISTER ERROR:', err);
+    error.textContent = err.message || 'Erreur serveur';
+    error.style.display = 'block';
+  } finally {
+    loading.style.display = 'none';
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accueil - Bienvenue sur brazza immo ! </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+/* =========================
+   🇨🇬 CHARTE BRAZZA IMMO
+========================= */
+:root{
+  --green:#009543;
+  --green-dark:#006b30;
+  --yellow:#FBDE4A;
+  --red:#DC241F;
+
+  --text-dark:#1f2937;
+  --text-muted:#6b7280;
+  --bg:#f8fafc;
+  --card:#ffffff;
+  --border:#e5e7eb;
+}
+
+/* RESET */
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+  background:var(--bg);
+  color:var(--text-dark);
+}
+
+/* =========================
+   NAVBAR
+========================= */
+nav{
+  background:#fff;
+  box-shadow:0 4px 20px rgba(0,0,0,.06);
+  position:sticky;
+  top:0;
+  z-index:100;
+}
+
+.navbar-brand{
+  font-size:26px;
+  font-weight:900;
+  background:linear-gradient(90deg,var(--green),var(--yellow),var(--red));
+
+  /* standard */
+  background-clip: text;
+  color: transparent;
+
+  /* webkit */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.nav-link{
+  font-weight:600;
+  color:var(--text-dark)!important;
+  margin:0 10px;
+  position:relative;
+}
+
+.nav-link::after{
+  content:'';
+  position:absolute;
+  bottom:-6px;
+  left:0;
+  width:0;
+  height:3px;
+  background:linear-gradient(90deg,var(--green),var(--yellow));
+  transition:.3s;
+}
+
+.nav-link:hover::after,
+.nav-link.active::after{
+  width:100%;
+}
+
+/* =========================
+   HERO
+========================= */
+.hero{
+  background:
+    linear-gradient(135deg,
+      rgba(0,149,67,.95),
+      rgba(251,222,74,.9),
+      rgba(220,36,31,.9)
+    );
+  color:#111;
+  padding:90px 20px;
+  text-align:center;
+}
+
+.hero h1{
+  font-size:50px;
+  font-weight:900;
+  margin-bottom:20px;
+}
+
+.hero p{
+  font-size:18px;
+  opacity:.9;
+}
+
+.btn-primary-custom{
+  background:#fff;
+  color:#111;
+  padding:14px 36px;
+  font-weight:800;
+  border-radius:8px;
+  text-decoration:none;
+  transition:.3s;
+}
+
+.btn-primary-custom:hover{
+  background:var(--yellow);
+  transform:translateY(-3px);
+}
+
+/* =========================
+   FILTRES
+========================= */
+.filters{
+  background:var(--card);
+  padding:30px;
+  border-radius:16px;
+  box-shadow:0 15px 40px rgba(0,0,0,.08);
+  margin:40px 0;
+}
+
+.filter-group label{
+  font-weight:700;
+  color:var(--text-dark);
+}
+
+.filter-group select,
+.filter-group input{
+  width:100%;
+  padding:12px;
+  border:2px solid var(--border);
+  border-radius:8px;
+  font-size:14px;
+}
+
+.filter-group select:focus,
+.filter-group input:focus{
+  border-color:var(--green);
+  outline:none;
+  box-shadow:0 0 0 3px rgba(0,149,67,.15);
+}
+
+/* =========================
+   ANNONCES
+========================= */
+.annonces-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  gap:24px;
+}
+
+.annonce-card{
+  background:var(--card);
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:0 20px 40px rgba(0,0,0,.08);
+  transition:.35s;
+  cursor:pointer;
+}
+
+.annonce-card:hover{
+  transform:translateY(-8px);
+}
+
+.annonce-image{
+  height:200px;
+  background:linear-gradient(135deg,var(--green),var(--yellow),var(--red));
+}
+
+.annonce-body{
+  padding:22px;
+}
+
+.annonce-title{
+  font-size:18px;
+  font-weight:800;
+  margin-bottom:8px;
+}
+
+.annonce-price{
+  font-size:26px;
+  font-weight:900;
+  color:var(--green);
+}
+
+.annonce-location{
+  font-size:14px;
+  color:var(--text-muted);
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+/* BADGES */
+.annonce-type{
+  display:inline-block;
+  padding:6px 14px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:800;
+}
+
+.annonce-type.location{
+  background:rgba(0,149,67,.15);
+  color:var(--green);
+}
+
+.annonce-type.vente{
+  background:rgba(220,36,31,.15);
+  color:var(--red);
+}
+
+/* =========================
+   PAGINATION
+========================= */
+.pagination .page-link{
+  color:var(--green);
+  font-weight:700;
+}
+
+.pagination .page-item.active .page-link{
+  background:var(--green);
+  border-color:var(--green);
+}
+
+/* =========================
+   FOOTER
+========================= */
+footer{
+  background:#0f172a;
+  color:#fff;
+  text-align:center;
+  padding:25px;
+  margin-top:60px;
+}
+
+/* MOBILE */
+@media(max-width:768px){
+  .hero h1{font-size:34px}
+  .annonces-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/index.html"><i class="fas fa-home"></i> l'immobilier à brazzaville </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/index.html">Accueil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/locations.html">En location</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/ventes.html">En vente</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/ajouter-annonce.html">Ajouter</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/mes-annonces.html">Mes annonces</a>
+                    </li>
+                    <li class="nav-item" id="adminLink" style="display: none;">
+                        <a class="nav-link" href="/admin-login.html">Admin</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="logoutBtn" onclick="logout(); return false;">Déconnexion</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="hero">
+        <h1>🏠 Bienvenue sur brazza immo </h1>
+        <p>Trouvez votre bien immobilier idéal</p>
+        <a href="/ajouter-annonce.html" class="btn-primary-custom">Publier une annonce</a>
+    </div>
+
+    <!-- Container -->
+    <div class="container my-5">
+        <!-- Filtres -->
+        <div class="filters">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="filter-group">
+                        <label>Type de transaction</label>
+                        <select id="filterTransaction" onchange="filterAnnonces()">
+                            <option value="">Tous</option>
+                            <option value="Location">Location</option>
+                            <option value="Vente">Vente</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="filter-group">
+                        <label>Type de bien</label>
+                        <select id="filterTypeBien" onchange="filterAnnonces()">
+                            <option value="">Tous</option>
+                            <option value="Maison">Maison</option>
+                            <option value="Studio">Studio</option>
+                            <option value="Appartement">Appartement</option>
+                            <option value="Boutique">Boutique</option>
+                            <option value="Terrain">Terrain</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="filter-group">
+                        <label>Quartier</label>
+                        <input type="text" id="filterQuartier" placeholder="Entrez un quartier" onchange="filterAnnonces()">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Annonces -->
+        <div id="loadingContainer" class="loading" style="display: none;">
+            <div class="spinner"></div>
+            <p>Chargement des annonces...</p>
+        </div>
+
+        <div id="annoncesContainer" class="annonces-grid"></div>
+
+        <div id="emptyState" class="empty-state" style="display: none;">
+            <i class="fas fa-search"></i>
+            <h3>Aucune annonce trouvée</h3>
+            <p>Modifiez vos critères de recherche</p>
+        </div>
+
+        <!-- Pagination -->
+        <nav id="paginationContainer"></nav>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 brazzaville Immobilier App. Tous droits réservés.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let currentPage = 1;
+        let totalPages = 1;
+
+        // Vérifier la connexion à la charge
+        window.addEventListener('load', () => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                // Rediriger vers la page de connexion
+                // Vous pouvez laisser accéder sans compte mais masquer certains éléments
+            } else {
+                // Vérifier le rôle admin
+                const user = JSON.parse(localStorage.getItem('user') || '{}');
+                if (user.role === 'admin') {
+                    document.getElementById('adminLink').style.display = 'block';
+                }
+            }
+
+            loadAnnonces();
+        });
+
+        async function loadAnnonces(page = 1) {
+            const transaction = document.getElementById('filterTransaction').value;
+            const typeBien = document.getElementById('filterTypeBien').value;
+            const quartier = document.getElementById('filterQuartier').value;
+
+            let url = `/api/annonces?page=${page}&limit=12`;
+            if (transaction) url += `&typeTransaction=${transaction}`;
+            if (typeBien) url += `&typeBien=${typeBien}`;
+            if (quartier) url += `&quartier=${quartier}`;
+
+            document.getElementById('loadingContainer').style.display = 'block';
+            document.getElementById('annoncesContainer').innerHTML = '';
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+
+                document.getElementById('loadingContainer').style.display = 'none';
+
+                if (data.success && data.annonces.length > 0) {
+                    document.getElementById('emptyState').style.display = 'none';
+                    displayAnnonces(data.annonces);
+                    currentPage = page;
+                    totalPages = data.pages;
+                    displayPagination();
+                } else {
+                    document.getElementById('emptyState').style.display = 'block';
+                    document.getElementById('paginationContainer').innerHTML = '';
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                document.getElementById('loadingContainer').style.display = 'none';
+                document.getElementById('emptyState').style.display = 'block';
+            }
+        }
+
+        function displayAnnonces(annonces) {
+            const container = document.getElementById('annoncesContainer');
+            container.innerHTML = annonces.map(annonce => `
+                <div class="annonce-card" onclick="viewAnnonce('${annonce._id}')">
+                    <div class="annonce-image">
+                        ${annonce.images && annonce.images[0] ? 
+                            `<img src="/uploads/${annonce.images[0]}" alt="${annonce.titre}" style="width: 100%; height: 100%; object-fit: cover;">` :
+                            '<i class="fas fa-image"></i> Pas d\'image'
+                        }
+                    </div>
+                    <div class="annonce-body">
+                        <h3 class="annonce-title">${annonce.titre}</h3>
+                        <div class="annonce-price">${annonce.prix.toLocaleString()} FCFA</div>
+                        <div class="annonce-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            ${annonce.quartier}
+                        </div>
+                        <div>
+                            <span class="annonce-type ${annonce.typeTransaction.toLowerCase()}">${annonce.typeTransaction}</span>
+                            <span class="annonce-type">${annonce.typeBien}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function displayPagination() {
+            const container = document.getElementById('paginationContainer');
+            container.innerHTML = '';
+
+            if (totalPages > 1) {
+                let html = '<ul class="pagination">';
+
+                if (currentPage > 1) {
+                    html += `<li class="page-item"><a class="page-link" onclick="loadAnnonces(${currentPage - 1})" href="javascript:void(0)">Précédent</a></li>`;
+                }
+
+                for (let i = 1; i <= totalPages; i++) {
+                    if (i === currentPage) {
+                        html += `<li class="page-item active"><span class="page-link">${i}</span></li>`;
+                    } else {
+                        html += `<li class="page-item"><a class="page-link" onclick="loadAnnonces(${i})" href="javascript:void(0)">${i}</a></li>`;
+                    }
+                }
+
+                if (currentPage < totalPages) {
+                    html += `<li class="page-item"><a class="page-link" onclick="loadAnnonces(${currentPage + 1})" href="javascript:void(0)">Suivant</a></li>`;
+                }
+
+                html += '</ul>';
+                container.innerHTML = html;
+            }
+        }
+
+        function filterAnnonces() {
+            loadAnnonces(1);
+        }
+
+        function viewAnnonce(id) {
+            window.location.href = `/annonce-detail.html?id=${id}`;
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = '/login.html';
+        }
+    </script>
+</body>
+</html>
